@@ -7,6 +7,12 @@ import App from './App'
 // 解决手机端点击300毫秒延迟 
 import FastClick from 'fastclick'
 import router from './router'
+// 图片的懒加载
+import lazyLoad from 'vue-lazyload'
+Vue.use(lazyLoad, {
+	error: require('@/img/loading.gif'),
+	loading: require('@/img/loading.gif')
+})
 Vue.config.productionTip = false
 if ('addEventListener' in document) {
   document.addEventListener('DOMContentLoaded', function() {

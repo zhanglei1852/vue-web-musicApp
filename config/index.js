@@ -2,8 +2,10 @@
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
-const path = require('path')
 
+
+const path = require('path')
+const axios = require('axios')
 module.exports = {
   dev: {
 
@@ -11,16 +13,19 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-        '/api':{
+        /*
+        '/getMainList':{
             target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
             changeOrigin: true,
             pathReWrite: {
-                '^/api': '/'
+                '^/getMainList': ''
             },
-            onProxyReq: function (proxyReq, req, res) {
-                
+            onProxyReq: function (proxyReq, req, res) {  
+              proxyReq.setHeader('host', 'c.y.qq.com')
+              proxyReq.setHeader('referer', 'https://c.y.qq.com/')          
             }
         }
+        */
     },
 
     // Various Dev Server settings
