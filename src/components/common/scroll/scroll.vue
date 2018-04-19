@@ -9,7 +9,16 @@ export default {
 	props: {
 		data: {
 			default:[]
-		}
+		},
+    click: {
+      type: Boolean,
+      default: false
+    },
+    probeType: {
+      type: Number,
+      // 默认节流 减少scroll时触发的事件 3时触发实时滚动
+      default: 1
+    }
 	},
   created () {
     this.$nextTick(() => {
@@ -24,8 +33,19 @@ export default {
         return false
       } else {
         this.scroll = new BetterScroll(this.$refs.wrapper, {
+          click: this.click,
+          probeType: this.probeType
         })
+        this._getScrollPosition()
       }
+    },
+    _getScrollPosition () {
+      this.scroll.on('scroll', (pos) => {
+        this.$emit('getPos', pos)
+      })
+    },
+    scrollTo (x, y, time) {
+      return this.scroll && this.scroll.scrollTo(x, y, time)
     }
   },
   watch: {
@@ -34,7 +54,7 @@ export default {
         if (this.scroll) {
           this.scroll.refresh()
         } else {
-          this._initBScroll
+          this._initBScroll()
         }
       })
     }
