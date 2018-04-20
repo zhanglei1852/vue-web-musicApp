@@ -1,10 +1,11 @@
 <template>
   <div class="main" ref="scrollContainer">
+    <router-view></router-view>
     <scroll :data="singerList" class="singerList" :probeType="probeType" @getPos='_getPos' ref="scrollComponent"> 
-      <div > 
+      <div class="scrollcontainer"> 
         <ul v-for="(item, index) in singerList" :key="index" ref="listGroup">
           <li class="groupTitle">{{item.Findex === 'hot' ? "热门" : item.Findex}}</li>
-          <li class="singerLi" v-for="(list, index) in item.list " :key="index">
+          <li class="singerLi" v-for="(list, index) in item.list " :key="index" @click="_toSingerDetail(list)">
               <div class="avatar">
                 <img v-lazy="list.avatar" class="avatarImg">
               </div>
@@ -29,6 +30,7 @@
 import { getSingerList } from '@/api/singer'
 import dealSingerList from '@/js/dealSingerList'
 import scroll from '@/components/common/scroll/scroll'
+import { mapMutations } from 'vuex'
 export default {
   components: {
     scroll
@@ -95,7 +97,16 @@ export default {
       let scrollY =  - this.listGroupHeight[index] >= 0 ? 0 :  - this.listGroupHeight[index]
       this.currentIndex = index
       this.$refs.scrollComponent.scrollTo(0, scrollY, 0)
-    }
+    },
+    _toSingerDetail (item) {
+      if (item) {
+        this.$router.push(`/singer/${item.Fsinger_mid}`)
+        this.set_singer(item)
+      }
+    },
+    ...mapMutations({
+      set_singer: 'SET_SINGER'
+    })
   },
   computed: {
     forShowTitle (item, index) {
@@ -119,9 +130,12 @@ export default {
 .currentActive{
   color:#f6cc17;
 }
+.scrollcontainer{
+  font-size: 12px;
+}
 .fixedTitle {
   position:absolute;
-  index: 22;
+  z-index: 22;
   top:0;
   width:100%;
   background: #444444;

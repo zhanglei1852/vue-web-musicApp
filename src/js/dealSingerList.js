@@ -10,7 +10,7 @@ export default function dealSingerList (res) {
       if (index < 10) {
           let item = {}
           item.Fsinger_name = el.Fsinger_name
-          item.Fsinger_id = el.Fsinger_id
+          item.Fsinger_mid = el.Fsinger_mid
           item.avatar = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${el.Fsinger_mid}.jpg?max_age=2592000`
           hot[0].list.push(item)
       }
@@ -19,7 +19,7 @@ export default function dealSingerList (res) {
       let item = {}
       item.Findex = el.Findex
       item.Fsinger_name = el.Fsinger_name
-      item.Fsinger_id = el.Fsinger_id
+      item.Fsinger_mid = el.Fsinger_mid
       item.avatar = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${el.Fsinger_mid}.jpg?max_age=2592000`
       codeArray.push(item)
     })
@@ -36,7 +36,7 @@ export default function dealSingerList (res) {
         item.Findex = codeArray[i].Findex
         let obj = {}
         obj.Fsinger_name = codeArray[i].Fsinger_name
-        obj.Fsinger_id = codeArray[i].Fsinger_id
+        obj.Fsinger_mid = codeArray[i].Fsinger_mid
         obj.avatar = codeArray[i].avatar
         item.list.push(obj)
       } else {
@@ -47,7 +47,7 @@ export default function dealSingerList (res) {
         }
         let obj = {}
         obj.Fsinger_name = codeArray[i].Fsinger_name
-        obj.Fsinger_id = codeArray[i].Fsinger_id
+        obj.Fsinger_mid = codeArray[i].Fsinger_mid
          obj.avatar = codeArray[i].avatar
         item.list.push(obj)
       }

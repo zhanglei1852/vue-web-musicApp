@@ -12,7 +12,7 @@ export default {
 		},
     click: {
       type: Boolean,
-      default: false
+      default: true
     },
     probeType: {
       type: Number,

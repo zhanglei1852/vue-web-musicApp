@@ -9,6 +9,7 @@ import FastClick from 'fastclick'
 import router from './router'
 // 图片的懒加载
 import lazyLoad from 'vue-lazyload'
+import store from './store'
 Vue.use(lazyLoad, {
 	error: require('@/img/loading.gif'),
 	loading: require('@/img/loading.gif')
@@ -23,6 +24,7 @@ if ('addEventListener' in document) {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

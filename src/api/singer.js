@@ -31,5 +31,5 @@ export function getSingerDetail (singerId) {
     songstatus: 1,
     singermid: singerId
   })
-  return json(url, params, 'jsonpCallback')
+  return jsonp(url, params, 'jsonpCallback')
 }
