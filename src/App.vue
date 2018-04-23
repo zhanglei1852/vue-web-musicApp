@@ -4,14 +4,17 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 <script>
 import mHeader from '@/components/common/mHeader/m-header'
+import player from '@/components/pages/player'
 export default {
   name: 'App',
   components: {
-    mHeader
+    mHeader,
+    player
   }
 }
 </script>

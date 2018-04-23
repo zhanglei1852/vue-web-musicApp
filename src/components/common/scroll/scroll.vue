@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     _initBScroll () {
-      if (this.scroll) {
+      if (this.scroll || !this.$refs.wrapper.children || !this.$refs.wrapper.children.length) {
         return false
       } else {
         this.scroll = new BetterScroll(this.$refs.wrapper, {
