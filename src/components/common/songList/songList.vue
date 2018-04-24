@@ -1,6 +1,6 @@
 <template>
 <ul class="songListContainer">
-  <li class="songItem" v-for="(item,index) in songList" :key="index">
+  <li class="songItem" v-for="(item,index) in songList" :key="index" @click="openPlayer(index)">
     <div class="name">{{item.name}}</div>
     <div class="desc">{{item.singer + "-" + item.album}}</div>
   </li>
@@ -8,11 +8,20 @@
 </template>
 <script>
 import { getSingerDetail } from '@/api/singer'
+import { mapActions } from 'vuex'
 export default {
   props: {
     songList: {
       default: []
     }  
+  },
+  methods: {
+    openPlayer (index) {
+      this.initPlay({ list: this.songList, index: index})
+    },
+    ...mapActions({
+      initPlay: 'INIT_PLAY'  
+    })
   }
 }
 </script>

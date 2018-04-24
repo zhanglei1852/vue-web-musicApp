@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import mutations from './mutations'
 import * as getters from  './getters'
 import actions from './action'
+import createLogger from 'vuex/dist/logger'
+const debug = process.env.NODE_ENV !== 'production'
 Vue.use(Vuex)
 const state = {
 	singer: {},
@@ -13,11 +15,15 @@ const state = {
 	// 正在播放的index
 	playIndex: -1,
 	// 是否全屏播放
-	fullScreen: false
+	fullScreen: false,
+	// 顺序列表
+	sequenceList: []
 } 
 export default new Vuex.Store({
 	state,
 	getters,
 	mutations,
-	actions
+	actions,
+	strict: debug,
+ 	plugins: debug ? [createLogger()] : []
 })

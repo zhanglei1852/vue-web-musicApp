@@ -4,5 +4,6 @@ export default {
     commit('SET_PLAYING', true)
     commit('SET_FULLSCREEN', true)
     commit('SET_PLAYLIST', list)
+    commit('SET_SEQUENCELIST', list)
 	}
 }
