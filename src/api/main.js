@@ -38,3 +38,27 @@ export function getMainList () {
     return Promise.resolve(res.data)
   })
 }
+
+export function getMainSongList (id) {
+  const url = '/api/getMainSongList'
+  const data = Object.assign({},{
+    disstid: id,
+    g_tk: 1928093487,
+    inCharset: 'utf-8',
+    outCharset: 'utf-8',
+    notice: 0,
+    format: 'json',
+    type: 1,
+    json: 1,
+    utf8: 1,
+    onlysong: 0,
+    platform: 'yqq',
+    hostUin: 0,
+    needNewCode: 0
+  })
+  return axios.get(url,{
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+} 

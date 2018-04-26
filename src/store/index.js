@@ -17,7 +17,11 @@ const state = {
 	// 是否全屏播放
 	fullScreen: false,
 	// 顺序列表
-	sequenceList: []
+	sequenceList: [],
+	// 歌单
+	mainList: {},
+	// 榜单 
+	topList: {}
 } 
 export default new Vuex.Store({
 	state,

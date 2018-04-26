@@ -1,6 +1,6 @@
 <template>
-  <song-list-view :songList='songList'>
-    <song-list :songList='songList'></song-list>
+  <song-list-view :songlist='songlist' :title="singer.Fsinger_name" :bgimg="singer.avatar">
+    <song-list :songlists='songlist'></song-list>
   </song-list-view>
 </template>
 <script>
@@ -17,25 +17,17 @@ export default{
   },
   data () {
     return {
-      songList: []
+      songlist: []
     }
   },
   created () {
-    this._checkInfo()
     getSingerDetail(this.singer.Fsinger_mid).then((res) => {
       if (res.code === 0) {
-        this.songList = dealSongList(res.data.list)
+        this.songlist = dealSongList(res.data.list)
       } else {
         return false
       } 
     })
-  },
-  methods: {
-    _checkInfo () {
-      if (!this.singer.avatar) {
-        this.$router.back()
-      }
-    }
   },
   computed: {
     ...mapGetters([

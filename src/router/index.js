@@ -7,6 +7,7 @@ import rank from '@/components/pages/rank'
 import search from '@/components/pages/search'
 import singerDetail from '@/components/pages/singerDetail'
 */
+// 路由懒加载
 const main = (resolve) => {
   import('@/components/pages/main').then((module) => {
     resolve(module)
@@ -36,6 +37,18 @@ const singerDetail = (resolve) => {
     resolve(module)
   })
 }
+
+const mainSongList = (resolve) => {
+  import('@/components/pages/mainSongList').then((module) => {
+    resolve(module)
+  })
+}
+
+const rankSongList = (resolve) => {
+  import ('@/components/pages/rankSongList').then((module) => {
+    resolve(module)
+  })
+}
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -45,7 +58,13 @@ export default new Router({
     },
     {
       path: '/main',
-      component: main
+      component: main,
+      children: [
+        {
+          path: ':id',
+          component: mainSongList
+        }
+      ]
     },
     {
       path: '/singer',
@@ -59,7 +78,13 @@ export default new Router({
     },
     {
       path: '/rank',
-      component: rank
+      component: rank,
+      children: [
+        { 
+          path: ':id',
+          component: rankSongList
+        }
+      ]
     },
     {
       path: '/search',

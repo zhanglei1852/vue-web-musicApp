@@ -46,6 +46,9 @@ export default {
     },
     scrollTo (x, y, time) {
       return this.scroll && this.scroll.scrollTo(x, y, time)
+    },
+    refresh () {
+      this.scroll && this.scroll.refresh()
     }
   },
   watch: {

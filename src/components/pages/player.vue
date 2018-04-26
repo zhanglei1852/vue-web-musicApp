@@ -1,9 +1,9 @@
 <template>
-  <transition name="playerClose">
-    <div>
+  <div v-show="playList.length">
+    <transition name="playerClose">
       <div class="main" v-show="fullScreen">
         <div class="background">
-          <img :src="_getPlayingSong.image">
+          <img :src="_getPlayingSong.image ? _getPlayingSong.image : ''">
         </div>
         <span class="closePlay icon-back"  @click="_playClose"></span>
         <div class="songTitle">
@@ -25,31 +25,33 @@
           </div>
           <div class="playerIcon">
             <div class="iconItem"><span class="icon-random"></span></div>
-            <div class="iconItem"><span class="icon-prev"></span></div>
+            <div class="iconItem"><span class="icon-prev" @click="prev"></span></div>
             <div class="iconItem iconPlaying"><span :class="playIcon" @click.stop="togglePlay"></span></div>
-            <div class="iconItem"><span class="icon-next"></span></div>
+            <div class="iconItem"><span class="icon-next" @click="next"></span></div>
             <div class="iconItem"><span class="icon-favorite"></span></div>
           </div>
         </div>
         <audio :src="_getPlayingSong.url" ref="audio" @loadstart="loadstart" @play="play" @pause="pause" autoplay="true" @ended ="ended" @error="error" @timeupdate="timeupdate"></audio>
       </div>
-      <div class="miniPlayer" v-show="!fullScreen">
-        <div class="container">
-          <div class="avatar">
-            <span class="img" :class="{rotate:isPlaying}" :style="{backgroundSize:cover,backgroundImage:_bgImg}"></span>
-          </div>
-          <div class="singer">
-            <div class="name">{{ _getPlayingSong.name ? _getPlayingSong.name : ''}}</div>
-            <div class="sname">{{ _getPlayingSong.singer ? _getPlayingSong.singer: ''}}</div>
-          </div>
-          <div class="mini-icon">
-            <span :class="playIcon" @click.stop="togglePlay"></span>
-            <span class="icon-playlist iconPlayList" ></span>
-          </div>
+    </transition>
+    <transition name="playerClose">
+    <div class="miniPlayer" v-show="!fullScreen">
+      <div class="container">
+        <div class="avatar">
+          <span class="img" :class="{rotate:isPlaying}" :style="{backgroundSize:cover,backgroundImage:_bgImg}"></span>
+        </div>
+        <div class="singer" @click="_openFull">
+          <div class="name">{{ _getPlayingSong.name ? _getPlayingSong.name : ''}}</div>
+          <div class="sname">{{ _getPlayingSong.singer ? _getPlayingSong.singer: ''}}</div>
+        </div>
+        <div class="mini-icon">
+          <span :class="playIcon" @click.stop="togglePlay"></span>
+          <span class="icon-playlist iconPlayList" ></span>
         </div>
       </div>
     </div>
-  </transition>
+    </transition>
+  </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex'
@@ -66,7 +68,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      set_fullScreen: 'SET_FULLSCREEN'
+      set_fullScreen: 'SET_FULLSCREEN',
+      set_playIndex: 'SET_PLAYINDEX',
+      set_playList: 'SET_PLAYLIST'
     }),
     _playClose () {
       this.set_fullScreen(false)
@@ -81,22 +85,29 @@ export default {
        this.isPlaying = false
     },
     error () {
-      alert("出错了！")
+      alert("出错了！qq音乐接口 每天会更新一个vkey 请在dealSongList.js中修改")
+    },
+    next () {
+      this.playIndex < this.playList.length ? this.set_playIndex(this.playIndex + 1) : this.set_playIndex(0)
+    },
+    prev () {
+      this.playIndex > 0 ? this.set_playIndex(this.playIndex - 1) : this.set_playIndex(this.playList.length - 1)
     },
     loadstart () {
-      console.log("loadStart")
     },
     timeupdate () {
-      let audio = this.$refs.audio
-      this.currentTime = audio.currentTime 
-      let progressHeight = this.$refs.progressHeight.offsetWidth - BTNWIDTH
-      console.log(progressHeight)
-      this.progress = this.currentTime / this.playList[this.playIndex].duration * progressHeight + 'px'
+        let audio = this.$refs.audio
+        this.currentTime = audio.currentTime ? audio.currentTime : 0
+        let progressHeight = this.$refs.progressHeight.offsetWidth - BTNWIDTH
+        this.progress = this.currentTime / this.playList[this.playIndex].duration * progressHeight + 'px'
     },
     togglePlay () {
       this.isPlaying = !this.isPlaying
       let audio = this.$refs.audio
       this.isPlaying ? audio.play() : audio.pause()
+    },
+    _openFull () {
+      this.set_fullScreen(true)
     }
   },
   mounted () {
@@ -109,6 +120,13 @@ export default {
       'playList'
     ]),
     _getPlayingSong () {
+      if (!this.playList.length) {
+        return {
+          image: '',
+          name: '',
+          singer: ''
+        }
+      }
       return this.playList[this.playIndex] 
     },
     _bgImg () {

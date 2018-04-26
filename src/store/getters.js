@@ -13,5 +13,10 @@ export const playIndex = (state) => {
 export const fullScreen = (state) => {
 	return state.fullScreen
 }
-
+export const mainList = (state) => {
+	return state.mainList
+}
+export const topList = (state) => {
+	return state.topList
+}
 

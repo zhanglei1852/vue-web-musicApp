@@ -1,17 +1,17 @@
 <template>
   <transition name="fade">
     <div class="singerDetail" ref="singerDetailcontainer">
-      <div class="singerBg" :style="{background:singerImg,backgroundSize:bgsize}" ref="singerBg">
+      <div class="singerBg" :style="{background:bgImg,backgroundSize:bgsize}" ref="singerBg">
         <span class="back" @click='_back'></span>
         <div class="singerName">
-          {{singer.Fsinger_name}}
+          {{title}}
         </div>
         <div class="listenList" v-show="showBtn">
           <span>随机播放全部</span>
         </div>
       </div>
       <div class="overflowBg" ref="overflowBg"></div>
-      <scroll class="scrollWrapper" @getPos="_getScrollPos" :probeType="probeType" :data='songList' ref="scrollContainer">
+      <scroll class="scrollWrapper" @getPos="_getScrollPos" :style="{bottom:calBottom}" :probeType="probeType" :data='songlist' ref="scrollContainer">
         <slot></slot>
       </scroll>
     </div>
@@ -21,11 +21,21 @@
 import { mapGetters } from 'vuex'
 import scroll from '@/components/common/scroll/scroll'
 import { getSingerDetail } from '@/api/singer'
+import mixin from '@/js/mixin'
 export default {
+  mixins: [mixin],
   props: {
-    songList: {
+    songlist: {
       default: []
-    }  
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    bgimg: {
+      type: String,
+      default: ''
+    }
   },
   components: {
     scroll
@@ -34,15 +44,13 @@ export default {
     return {
       showBtn: true,
       probeType: 3,
-      singerImg: '',
-      bgsize: 'cover',
+      bgsize: 'cover'
     }
   },
   created () {
-    if (!this.singer.avatar) {
-      this.$router.push('/singer')
-    }
-    this.singerImg = `url(${this.singer.avatar}) no-repeat`
+    if (!this.bgimg) {
+      this.$router.back()
+    } 
   },
   mounted () {
     this.singerBgHeight = parseFloat(this.$refs.singerBg.offsetHeight)
@@ -51,7 +59,7 @@ export default {
   },
   methods: {
     _back () {
-      this.$router.push('/singer')
+      this.$router.back()
     },
     _getScrollPos (pos) {
       const y = -pos.y
@@ -74,7 +82,17 @@ export default {
   computed: {
     ...mapGetters([
       'singer'
-    ])
+    ]),
+    bgImg () {
+       return `url(${this.bgimg}) no-repeat`
+    }
+  },
+  watch: {
+    'calBottom' () {
+      this.$nextTick(() => {
+        this.$refs.scrollContainer.refresh()
+      })
+    }
   }
 }
 </script>

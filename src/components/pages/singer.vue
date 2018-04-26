@@ -1,5 +1,5 @@
 <template>
-  <div class="main" ref="scrollContainer">
+  <div class="main" ref="scrollContainer" :style="{bottom:calBottom}">
     <router-view></router-view>
     <scroll :data="singerList" class="singerList" :probeType="probeType" @getPos='_getPos' ref="scrollComponent"> 
       <div class="scrollcontainer"> 
@@ -31,7 +31,9 @@ import { getSingerList } from '@/api/singer'
 import dealSingerList from '@/js/dealSingerList'
 import scroll from '@/components/common/scroll/scroll'
 import { mapMutations } from 'vuex'
+import mixin from '@/js/mixin'
 export default {
+  mixins: [mixin],
   components: {
     scroll
   },
@@ -122,6 +124,11 @@ export default {
       this.$nextTick(() => {
         this._getGroupPos()
       })
+    },
+    'calBottom' () {
+      this.$nextTick(() => {
+        this.$refs.scrollComponent.refresh()
+      }) 
     }
   }
 }

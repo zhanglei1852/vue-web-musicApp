@@ -16,5 +16,11 @@ export default {
   },
   'SET_SEQUENCELIST' (state, sequenceList) {
     return state.sequenceList = sequenceList 
+  },
+  'SET_MAINLIST' (state, mainList) {
+    return state.mainList = mainList
+  },
+  'SET_TOPLIST' (state, topList) {
+    return state.topList = topList
   }
 }

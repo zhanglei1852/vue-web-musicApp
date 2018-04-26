@@ -1,13 +1,13 @@
 <template>
-  <div class="main">
-    <scroll  class="scrollContainer" :data="mainList" >
+  <div class="main" :style="{bottom:calBottom}">
+    <scroll  class="scrollContainer" ref="calScroll" :data="mainList" >
       <div>
          <m-banner></m-banner>
         <div class="hotListText">
           热门歌单推荐
         </div>
         <ul>
-          <li class="listItem" v-for="(item, index) in mainList" :key="index">
+          <li class="listItem" v-for="(item, index) in mainList" :key="index" @click="jumpDetail(item)">
             <div class="itemImg">
               <img v-lazy="item.imgurl">
             </div>
@@ -23,13 +23,17 @@
         </ul>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 <script>
 import { getMainList } from '@/api/main'
+import { mapGetters, mapMutations } from 'vuex'
 import mBanner from '@/components/common/banner/banner'
 import scroll from '@/components/common/scroll/scroll'
+import mixin from '@/js/mixin'
 export default {
+  mixins: [mixin],
   components: {
     mBanner,
     scroll
@@ -44,6 +48,27 @@ export default {
   		this.mainList = res.data.list
       console.log(this.mainList)    
   	})
+  },
+  methods: {
+    ...mapMutations({
+      setMainList: 'SET_MAINLIST'
+    }),
+    jumpDetail (item) {
+      this.setMainList(item)
+      this.$router.push(`/main/${item.dissid}`) 
+    }
+  },
+  computed : {
+    ...mapGetters([
+      'playList'
+    ])
+  },
+  watch: {
+    'calBottom' () {
+      this.$nextTick(() => {
+        this.$refs.calScroll.refresh()
+      })
+    }
   }
 }
 </script>
