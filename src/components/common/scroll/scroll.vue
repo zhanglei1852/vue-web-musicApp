@@ -1,6 +1,8 @@
 <template>
   <div class="wrapperContainer" ref="wrapper">
-    <slot></slot>
+    <div>
+      <slot></slot>
+    </div>
   </div>
 </template>
 <script>
@@ -8,7 +10,10 @@ import BetterScroll from 'better-scroll'
 export default {
 	props: {
 		data: {
-			default:[]
+      type: Array,
+			default () {
+        return []
+      }
 		},
     click: {
       type: Boolean,

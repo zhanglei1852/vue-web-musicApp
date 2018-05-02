@@ -44,7 +44,6 @@ export default {
     banner().then((data) => {
       if (data.code === 0) {
         this.banner = data.data.slider
-        console.log(this.banner)
       }
     })
   }

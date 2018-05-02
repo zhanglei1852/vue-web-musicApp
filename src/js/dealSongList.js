@@ -17,7 +17,7 @@ function song (item) {
     album: item.albumname,
     duration: item.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${item.albummid}.jpg?max_age=2592000`,
-    url: `http://dl.stream.qqmusic.qq.com/C400${item.songmid}.m4a?guid=7397647150&vkey=CCD5C5479B11AB8E0F8CE59ED8AD69C81D878E910BBB8C1652548BFF7223A566FB366D987D0DD7FFAB0CCD004950C7A9ECD791B0FD1C4E8A&uin=0&fromtag=38`
+    url: `http://dl.stream.qqmusic.qq.com/C400${item.songmid}.m4a?guid=7397647150&vkey=F554FB87AF71F73D95EBEF9ADA2CEB9569777318B860C975AD8AA2BFF2942C0321D5108586DE6624643E6656EC63FE24F22EAAC70CA45F03&uin=0&fromtag=38`
   }
 }
 function dealSinger (singerList) {

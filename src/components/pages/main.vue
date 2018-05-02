@@ -44,7 +44,8 @@ export default {
   	}
   },
   created () {
-  	this.mainList = getMainList().then((res) => {
+  	getMainList().then((res) => {
+      console.log(res.data.list)
   		this.mainList = res.data.list
       console.log(this.mainList)    
   	})

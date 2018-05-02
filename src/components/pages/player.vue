@@ -10,9 +10,20 @@
           <p class="name">{{ _getPlayingSong.name ? _getPlayingSong.name : ''}}</p>
           <p class="singer">{{ _getPlayingSong.singer ? _getPlayingSong.singer: ''}}</p>
         </div>
-        <div class="songRotateBg">
-          <div class="rotateImg" :class="{rotate:isPlaying}" v-bind:style="{backgroundSize:cover,backgroundImage:_bgImg}"></div>
-        </div>
+        <transition name="fade">
+          <div class="songRotateBg" @click="showCdOrLyric" v-show="cdOrLyric">
+            <div class="rotateImg" :class="{rotate:isPlaying}" v-bind:style="{backgroundSize:cover,backgroundImage:_bgImg}"></div>
+          </div>
+        </transition >
+        <transition name="fade">
+          <div class="lyricContainer" @click="showCdOrLyric" v-show="!cdOrLyric">
+            <scroll :data="parseLyric.lines"  class="scroll">
+              <ul v-if='lyric'> 
+                <li v-for="(item, index) in lyricData" :class="{active: lineNum === index }" :key="index" >{{ item.txt }}</li>
+              </ul>
+            </scroll>
+          </div>
+        </transition>
         <div class="playerPanel">
           <div class="percentContainer">
             <div class="percent">
@@ -56,14 +67,26 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import { formatTime } from '@/js/util'
+import LyricParser from 'lyric-parser'
+import { getLyric } from '@/api/lyric'
+import { Base64 } from 'js-base64'
+import  scroll from '@/components/common/scroll/scroll'
 const BTNWIDTH = 16
 export default {
+  components: {
+    scroll,
+  },
   data () {
     return {
       cover: 'cover',
       isPlaying: false,
       currentTime: 0,
-      progress: 0
+      progress: 0,
+      lyric: '',
+      parseLyric: '',
+      lyricData: [],
+      lineNum: 0,
+      cdOrLyric: true
     }
   },
   methods: {
@@ -77,6 +100,17 @@ export default {
     },
     play () {
       this.isPlaying = true
+      this.lyricData = [{txt: "正在加载歌词。。。"}]
+      getLyric(this._getPlayingSong.mid).then((res) => {
+        if(res.code === 0) {
+          this.lyric = Base64.decode(res.lyric)
+          this.parseLyric = new LyricParser(this.lyric, (obj) => {
+            this.lineNum = obj.lineNum
+          })
+          this.lyricData = this.parseLyric.lines
+          this.parseLyric.play()
+        }
+      })
     },
     ended () {
       this.isPlaying = false
@@ -88,18 +122,22 @@ export default {
       alert("出错了！qq音乐接口 每天会更新一个vkey 请在dealSongList.js中修改")
     },
     next () {
+      this.lyricData = [{txt: "正在加载歌词。。。"}]
       this.playIndex < this.playList.length ? this.set_playIndex(this.playIndex + 1) : this.set_playIndex(0)
     },
     prev () {
+      this.lyricData = [{txt: "正在加载歌词。。。"}]
       this.playIndex > 0 ? this.set_playIndex(this.playIndex - 1) : this.set_playIndex(this.playList.length - 1)
     },
     loadstart () {
     },
     timeupdate () {
+      this.$nextTick(() => {
         let audio = this.$refs.audio
         this.currentTime = audio.currentTime ? audio.currentTime : 0
         let progressHeight = this.$refs.progressHeight.offsetWidth - BTNWIDTH
         this.progress = this.currentTime / this.playList[this.playIndex].duration * progressHeight + 'px'
+      })
     },
     togglePlay () {
       this.isPlaying = !this.isPlaying
@@ -108,6 +146,9 @@ export default {
     },
     _openFull () {
       this.set_fullScreen(true)
+    },
+    showCdOrLyric () {
+      return this.cdOrLyric = !this.cdOrLyric
     }
   },
   mounted () {
@@ -176,6 +217,28 @@ export default {
     transform: rotate(270deg);
     z-index: 22;
   }
+  .lyricContainer{
+    position: fixed;
+    top: 80px;
+    overflow: hidden;
+    text-align: center;
+    bottom: 130px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 999999;
+    color: rgba(255,255,255, 0.6);
+    .scroll{
+      height: 100%;
+      overflow: hidden;
+    }
+    li{
+      line-height: 30px;
+      &.active{
+        color:rgb(255,255,255)
+      }
+    }
+  }
   .songRotateBg{
     position: fixed;
     top: 120px;
@@ -239,7 +302,6 @@ export default {
         span{
           flex: 0 0 55px;
           text-align: center;
-
         }
         >div{
           flex: 1;
@@ -326,5 +388,15 @@ export default {
 @keyframes rotateImg {
   0% { transform: rotate(0ded)}
   100% { transform: rotate(360deg)}
+}
+
+.fade-enter-active,.fade-leave-active{
+  transition: all 0.6s linear;
+}
+.fade-enter,.fade-leave-to{
+  opacity: 0;
+}
+.fade-enter-to,.fade-leave{
+  opacity: 1;
 }
 </style>

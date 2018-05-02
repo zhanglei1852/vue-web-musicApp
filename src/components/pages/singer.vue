@@ -50,7 +50,7 @@ export default {
     }
   },
   created () {
-    this.singerList = getSingerList().then((res) => {
+    getSingerList().then((res) => {
       this.singerList = dealSingerList(res)
       this._rightNav(this.singerList)
     })
